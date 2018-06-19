@@ -45,6 +45,8 @@ export default class AutoHeightWebView extends PureComponent {
     animationDuration: PropTypes.number,
     // offset of rn webView margin
     heightOffset: PropTypes.number,
+    // loading time for long term loading
+    loadingTime: PropTypes.number,
     // baseUrl not work in android 4.3 or below version
     enableBaseUrl: PropTypes.bool,
     style: ViewPropTypes.style,
@@ -68,7 +70,8 @@ export default class AutoHeightWebView extends PureComponent {
     enableBaseUrl: false,
     enableAnimation: true,
     animationDuration: 555,
-    heightOffset: 20
+    heightOffset: 20,
+    loadingTime: 1000,
   };
 
   constructor(props) {
@@ -138,7 +141,7 @@ export default class AutoHeightWebView extends PureComponent {
       if (!this.finishInterval) {
         isBelowKitKat ? this.sendToWebView('getBodyHeight') : this.postMessage('getBodyHeight');
       }
-    }, 1000);
+    }, this.props.loadingTime);
   }
 
   stopInterval() {
