@@ -138,7 +138,7 @@ export default class AutoHeightWebView extends PureComponent {
       if (!this.finishInterval) {
         isBelowKitKat ? this.sendToWebView('getBodyHeight') : this.postMessage('getBodyHeight');
       }
-    }, 205);
+    }, 1000);
   }
 
   stopInterval() {
