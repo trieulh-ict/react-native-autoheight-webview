@@ -117,7 +117,7 @@ export default class AutoHeightWebView extends PureComponent {
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           style={styles.webView}
           injectedJavaScript={script + customScript}
-          scrollEnabled={false}
+          scrollEnabled={true}
           scalesPageToFit={scalesPageToFit}
           source={webViewSource}
           onNavigationStateChange={this.handleNavigationStateChange}
