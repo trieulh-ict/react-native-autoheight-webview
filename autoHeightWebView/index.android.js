@@ -136,12 +136,20 @@ export default class AutoHeightWebView extends PureComponent {
   }
 
   startInterval() {
+    this.loadCount = 0;
     this.finishInterval = false;
     this.interval = setInterval(() => {
       if (!this.finishInterval) {
         isBelowKitKat ? this.sendToWebView('getBodyHeight') : this.postMessage('getBodyHeight');
       }
     }, this.props.loadingTime);
+
+    this.firstInterval = setInterval(() => {
+      if (!this.finishInterval) {
+        isBelowKitKat ? this.sendToWebView('getBodyHeight') : this.postMessage('getBodyHeight');
+      }
+    }, 300);
+
   }
 
   stopInterval() {
@@ -150,11 +158,17 @@ export default class AutoHeightWebView extends PureComponent {
   }
 
   onMessage = e => {
-    const height = parseInt(isBelowKitKat ? e.nativeEvent.message : e.nativeEvent.data);
+    let height = parseInt(isBelowKitKat ? e.nativeEvent.message : e.nativeEvent.data);
     if (height && height !== this.state.height) {
+      height = Math.abs(height - this.state.height) > 10 ? height : this.state.height;
+      this.loadCount += 1;
       const { enableAnimation, animationDuration, heightOffset } = this.props;
       enableAnimation && this.opacityAnimatedValue.setValue(0);
-      this.stopInterval();
+      if (this.loadCount >=2) {
+        this.stopInterval();
+      } else {
+        clearInterval(this.firstInterval);
+      }
       this.setState(
         {
           heightOffset,
